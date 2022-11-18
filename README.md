@@ -16,6 +16,7 @@ metrics:
 <iframe src="https://ghbtns.com/github-btn.html?user=speechbrain&repo=speechbrain&type=star&count=true&size=large&v=2" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
 <br/><br/>
 
+**IMPORTANT: This is a work in progress. This model is not providing meaningful output at the moment**
 
 # Text-to-Speech (TTS) with Fastspeech2 trained on LJSpeech
 
