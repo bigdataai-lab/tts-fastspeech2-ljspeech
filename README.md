@@ -18,9 +18,9 @@ metrics:
 
 **IMPORTANT: This is a work in progress. This model is not providing meaningful output at the moment**
 
-# Text-to-Speech (TTS) with Fastspeech2 trained on LJSpeech
+# Text-to-Speech (TTS) with FastSpeech2 trained on LJSpeech
 
-This repository provides all the necessary tools for Text-to-Speech (TTS)  with SpeechBrain using a [Tacotron2](https://arxiv.org/abs/1712.05884) pretrained on [LJSpeech](https://keithito.com/LJ-Speech-Dataset/).
+This repository provides all the necessary tools for Text-to-Speech (TTS)  with SpeechBrain using a [FastSpeech2](https://arxiv.org/abs/2006.04558) pretrained on [LJSpeech](https://keithito.com/LJ-Speech-Dataset/).
 
 The pre-trained model takes in input a short text and produces a spectrogram in output. One can get the final waveform by applying a vocoder (e.g., HiFIGAN) on top of the generated spectrogram.
 
@@ -34,38 +34,38 @@ pip install speechbrain
 Please notice that we encourage you to read our tutorials and learn more about
 [SpeechBrain](https://speechbrain.github.io).
 
-### Perform Text-to-Speech (TTS) with Fastspeech2
+### Perform Text-to-Speech (TTS) with FastSpeech2
 
 ```
 import torchaudio
-from speechbrain.pretrained import Tacotron2
+from speechbrain.pretrained import FastSpeech2
 from speechbrain.pretrained import HIFIGAN
 
 # Intialize TTS (tacotron2) and Vocoder (HiFIGAN)
-fastspeech2 = Tacotron2.from_hparams(source="speechbrain/tts-fastspeech2-ljspeech", savedir="tmpdir_tts")
-hifi_gan = HIFIGAN.from_hparams(source="speechbrain/tts-hifigan-ljspeech", savedir="tmpdir_vocoder")
+fastspeech2 = FastSpeech2.from_hparams(source="speechbrain/tts-fastspeech2-ljspeech", savedir="tmpdir_tts")
+hifi_gan = HIFIGAN.from_hparams(source="speechbrain/tts-hifigan-libritts-16kHz", savedir="tmpdir_vocoder")
 
 # Running the TTS
-mel_output, mel_length, alignment = fastspeech2.encode_text("Mary had a little lamb")
+mel_output, durations, pitch, energy = fastspeech2.encode_text(input_text)
 
 # Running Vocoder (spectrogram-to-waveform)
 waveforms = hifi_gan.decode_batch(mel_output)
 
 # Save the waverform
-torchaudio.save('example_TTS.wav',waveforms.squeeze(1), 22050)
+torchaudio.save('example_TTS.wav', waveforms.squeeze(1), 16000)
 ```
 
 If you want to generate multiple sentences in one-shot, you can do in this way:
 
 ```
-from speechbrain.pretrained import fastspeech2
-tacotron2 = Tacotron2.from_hparams(source="speechbrain/TTS_fastspeech2", savedir="tmpdir")
+from speechbrain.pretrained import FastSpeech2
+fastspeech2 = FastSpeech2.from_hparams(source="speechbrain/tts-fastspeech2-ljspeech", savedir="tmpdir_tts")
 items = [
        "A quick brown fox jumped over the lazy dog",
        "How much wood would a woodchuck chuck?",
        "Never odd or even"
      ]
-mel_outputs, mel_lengths, alignments = tacotron2.encode_batch(items)
+mel_outputs, durations, pitch, energy = fastspeech2.encode_batch(items)
 
 ```
 
